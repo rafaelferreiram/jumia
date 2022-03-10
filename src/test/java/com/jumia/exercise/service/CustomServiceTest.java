@@ -1,6 +1,7 @@
 package com.jumia.exercise.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.jumia.exercise.dto.RequestFilterDTO;
 import com.jumia.exercise.enums.CountryEnum;
+import com.jumia.exercise.exception.CustomerFilterException;
 import com.jumia.exercise.model.Customer;
 import com.jumia.exercise.repository.CustomerRepository;
 import com.jumia.exercise.service.impl.CustomerServiceImpl;
@@ -170,5 +172,40 @@ public class CustomServiceTest {
 
 	}
 
+	@Test(expected = CustomerFilterException.class)
+	public void shouldGetErrorWhenFilteringByCountry() {
+		when(repository.findAll()).thenReturn(null);
+		
+		RequestFilterDTO request = new RequestFilterDTO();
+		request.setCountry("cameroon");
+		
+		service.filterCustomersByRequest(request);
+		
+		fail();
+	}
+	
+	@Test(expected = CustomerFilterException.class)
+	public void shouldGetErrorWhenFilteringByState() {
+		when(repository.findAll()).thenReturn(null);
+		
+		RequestFilterDTO request = new RequestFilterDTO();
+		request.setState("valid");
+		
+		service.filterCustomersByRequest(request);
+		
+		fail();
+	}
+	@Test(expected = CustomerFilterException.class)
+	public void shouldGetErrorWhenFilteringByCountryAndState() {
+		when(repository.findAll()).thenReturn(null);
+		
+		RequestFilterDTO request = new RequestFilterDTO();
+		request.setCountry("cameroon");
+		request.setState("valid");
+		
+		service.filterCustomersByRequest(request);
+		
+		fail();
+	}
 
 }
