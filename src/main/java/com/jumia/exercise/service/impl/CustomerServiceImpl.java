@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.jumia.exercise.contants.RegexConstans;
 import com.jumia.exercise.dto.RequestFilterDTO;
 import com.jumia.exercise.enums.CountryEnum;
+import com.jumia.exercise.exception.CustomerFilterException;
 import com.jumia.exercise.model.Customer;
 import com.jumia.exercise.repository.CustomerRepository;
 import com.jumia.exercise.service.CustomerService;
@@ -91,27 +92,46 @@ public class CustomerServiceImpl implements CustomerService {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public ResponseEntity filterCustomersByRequest(RequestFilterDTO filterDTO) {
+		log.info("CustomerServiceImpl.filterCustomersByRequest - start");
 		List<Customer> customers = getAllCustomers();
 		if (isFilterByCountry(filterDTO)) {
-			List<Customer> filteredBy = customers.stream()
-					.filter(customer -> customer.getPhone()
-							.contains(CountryEnum.valueOf(filterDTO.getCountry()).getCountryCode()))
-					.collect(Collectors.toList());
-			return ResponseEntity.status(HttpStatus.OK).body(filteredBy);
+			try {
+				List<Customer> filteredBy = customers.stream()
+						.filter(customer -> customer.getPhone()
+								.contains(CountryEnum.valueOf(filterDTO.getCountry()).getCountryCode()))
+						.collect(Collectors.toList());
+				log.info("CustomerServiceImpl.filterCustomersByRequest - end");
+				return ResponseEntity.status(HttpStatus.OK).body(filteredBy);
+			} catch (Exception e) {
+				log.error("Erros while filtering by country. ", e.getMessage());
+				throw new CustomerFilterException("Erros while filtering by country ");
+			}
 		}
 		
 		if (isFilterByState(filterDTO)) {
+			try {
 			Map<String, List<Customer>> validCutomers = categorizeByValidNumber();
+			log.info("CustomerServiceImpl.filterCustomersByRequest - end");
 			return ResponseEntity.status(HttpStatus.OK).body(validCutomers.get(filterDTO.getState()));
+		} catch (Exception e) {
+			log.error("Erros while filtering by state. ", e.getMessage());
+			throw new CustomerFilterException("Erros while filtering by state ");
+		}
 		}
 		else {	
+			try {
 			Pattern pattern = Pattern.compile(RegexUtils.getRegexByRequest(filterDTO.getCountry()));
 			List<Customer> filteredBy = customers.stream()
 					.filter(customer -> customer.getPhone()
 							.contains(CountryEnum.valueOf(filterDTO.getCountry().toUpperCase()).getCountryCode()))
 					.collect(Collectors.toList());
-			List<Customer> collect = "VALID".equalsIgnoreCase(filterDTO.getState()) ? filteredBy.stream().filter(customer -> RegexUtils.validaRegex(customer, pattern)).collect(Collectors.toList()) :  filteredBy.stream().filter(customer -> !RegexUtils.validaRegex(customer, pattern)).collect(Collectors.toList());
-			return ResponseEntity.status(HttpStatus.OK).body(collect);
+			List<Customer> listOfCustomerStates = "VALID".equalsIgnoreCase(filterDTO.getState()) ? filteredBy.stream().filter(customer -> RegexUtils.validaRegex(customer, pattern)).collect(Collectors.toList()) :  filteredBy.stream().filter(customer -> !RegexUtils.validaRegex(customer, pattern)).collect(Collectors.toList());
+			log.info("CustomerServiceImpl.filterCustomersByRequest - end");
+			return ResponseEntity.status(HttpStatus.OK).body(listOfCustomerStates);
+		} catch (Exception e) {
+			log.error("Erros while filtering by country and state. ", e.getMessage());
+			throw new CustomerFilterException("Erros while filtering by country and state.");
+		}
 		}		
 	}
 	
