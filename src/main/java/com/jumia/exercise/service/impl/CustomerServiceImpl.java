@@ -27,14 +27,14 @@ import com.jumia.exercise.utils.RegexUtils;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
 	@Autowired
 	private CustomerRepository repository;
-	
+
 	@Override
-	public List<Customer> getAllCustomers(){
+	public List<Customer> getAllCustomers() {
 		log.info("CustomerServiceImpl.getAllCustomers - start");
 		List<Customer> customers = repository.findAll();
 		log.info("CustomerServiceImpl.getAllCustomers - end ");
@@ -42,52 +42,81 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Map<CountryEnum, List<Customer>> categorizeByCountry(){
+	public Map<CountryEnum, List<Customer>> categorizeByCountry() {
 		log.info("CustomerServiceImpl.categorizeByCountry - start");
 		List<Customer> customers = getAllCustomers();
-		HashMap<CountryEnum, List<Customer>> categorizationByCountry = new LinkedHashMap<>();		        
-		categorizationByCountry.put(CountryEnum.CAMEROON, customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.CAMEROON.getCountryCode())).collect(Collectors.toList()));
-		categorizationByCountry.put(CountryEnum.ETHIOPIA, customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.ETHIOPIA.getCountryCode())).collect(Collectors.toList()));
-		categorizationByCountry.put(CountryEnum.MOROCCO, customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.MOROCCO.getCountryCode())).collect(Collectors.toList()));
-		categorizationByCountry.put(CountryEnum.MOZAMBIQUE, customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.MOZAMBIQUE.getCountryCode())).collect(Collectors.toList()));
-		categorizationByCountry.put(CountryEnum.UGANDA, customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.UGANDA.getCountryCode())).collect(Collectors.toList()));
+		HashMap<CountryEnum, List<Customer>> categorizationByCountry = new LinkedHashMap<>();
+		categorizationByCountry.put(CountryEnum.CAMEROON,
+				customers.stream()
+						.filter(customer -> customer.getPhone().contains(CountryEnum.CAMEROON.getCountryCode()))
+						.collect(Collectors.toList()));
+		categorizationByCountry.put(CountryEnum.ETHIOPIA,
+				customers.stream()
+						.filter(customer -> customer.getPhone().contains(CountryEnum.ETHIOPIA.getCountryCode()))
+						.collect(Collectors.toList()));
+		categorizationByCountry.put(CountryEnum.MOROCCO,
+				customers.stream()
+						.filter(customer -> customer.getPhone().contains(CountryEnum.MOROCCO.getCountryCode()))
+						.collect(Collectors.toList()));
+		categorizationByCountry.put(CountryEnum.MOZAMBIQUE,
+				customers.stream()
+						.filter(customer -> customer.getPhone().contains(CountryEnum.MOZAMBIQUE.getCountryCode()))
+						.collect(Collectors.toList()));
+		categorizationByCountry.put(CountryEnum.UGANDA,
+				customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.UGANDA.getCountryCode()))
+						.collect(Collectors.toList()));
 		log.info("CustomerServiceImpl.categorizeByCountry - end ");
 		return categorizationByCountry;
 	}
 
 	@Override
-	public Map<String, List<Customer>> categorizeByCountryCode(){
+	public Map<String, List<Customer>> categorizeByCountryCode() {
 		log.info("CustomerServiceImpl.categorizeByCountryCode - start");
 		List<Customer> customers = getAllCustomers();
-		HashMap<String, List<Customer>> categorizationByCountryCode = new LinkedHashMap<>();		        
-		categorizationByCountryCode.put(CountryEnum.CAMEROON.getCountryCode(), customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.CAMEROON.getCountryCode())).collect(Collectors.toList()));
-		categorizationByCountryCode.put(CountryEnum.ETHIOPIA.getCountryCode(), customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.ETHIOPIA.getCountryCode())).collect(Collectors.toList()));
-		categorizationByCountryCode.put(CountryEnum.MOROCCO.getCountryCode(), customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.MOROCCO.getCountryCode())).collect(Collectors.toList()));
-		categorizationByCountryCode.put(CountryEnum.MOZAMBIQUE.getCountryCode(), customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.MOZAMBIQUE.getCountryCode())).collect(Collectors.toList()));
-		categorizationByCountryCode.put(CountryEnum.UGANDA.getCountryCode(), customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.UGANDA.getCountryCode())).collect(Collectors.toList()));
+		HashMap<String, List<Customer>> categorizationByCountryCode = new LinkedHashMap<>();
+		categorizationByCountryCode.put(CountryEnum.CAMEROON.getCountryCode(),
+				customers.stream()
+						.filter(customer -> customer.getPhone().contains(CountryEnum.CAMEROON.getCountryCode()))
+						.collect(Collectors.toList()));
+		categorizationByCountryCode.put(CountryEnum.ETHIOPIA.getCountryCode(),
+				customers.stream()
+						.filter(customer -> customer.getPhone().contains(CountryEnum.ETHIOPIA.getCountryCode()))
+						.collect(Collectors.toList()));
+		categorizationByCountryCode.put(CountryEnum.MOROCCO.getCountryCode(),
+				customers.stream()
+						.filter(customer -> customer.getPhone().contains(CountryEnum.MOROCCO.getCountryCode()))
+						.collect(Collectors.toList()));
+		categorizationByCountryCode.put(CountryEnum.MOZAMBIQUE.getCountryCode(),
+				customers.stream()
+						.filter(customer -> customer.getPhone().contains(CountryEnum.MOZAMBIQUE.getCountryCode()))
+						.collect(Collectors.toList()));
+		categorizationByCountryCode.put(CountryEnum.UGANDA.getCountryCode(),
+				customers.stream().filter(customer -> customer.getPhone().contains(CountryEnum.UGANDA.getCountryCode()))
+						.collect(Collectors.toList()));
 		log.info("CustomerServiceImpl.categorizeByCountryCode - end ");
 		return categorizationByCountryCode;
 	}
-	
+
 	@Override
 	public Map<String, List<Customer>> categorizeByValidNumber() {
 		log.info("CustomerServiceImpl.categorizeByValidNumber - start");
 		List<Customer> customers = getAllCustomers();
 		List<Customer> validNumbers = new ArrayList<>();
 		HashMap<String, List<Customer>> categorizationByValidNumber = new LinkedHashMap<>();
-		
+
 		validNumbers.addAll(filterValidNumberByCountry(customers, CountryEnum.CAMEROON, RegexConstans.CAMAROON_REGEX));
 		validNumbers.addAll(filterValidNumberByCountry(customers, CountryEnum.ETHIOPIA, RegexConstans.ETHIOPIA_REGEX));
 		validNumbers.addAll(filterValidNumberByCountry(customers, CountryEnum.MOROCCO, RegexConstans.MOROCCO_REGEX));
-		validNumbers.addAll(filterValidNumberByCountry(customers, CountryEnum.MOZAMBIQUE, RegexConstans.MOZAMBIQUE_REGEX));
-		validNumbers.addAll(filterValidNumberByCountry(customers, CountryEnum.UGANDA,RegexConstans.UGANDA_REGEX));
-		
+		validNumbers
+				.addAll(filterValidNumberByCountry(customers, CountryEnum.MOZAMBIQUE, RegexConstans.MOZAMBIQUE_REGEX));
+		validNumbers.addAll(filterValidNumberByCountry(customers, CountryEnum.UGANDA, RegexConstans.UGANDA_REGEX));
+
 		categorizationByValidNumber.put("VALID", validNumbers);
-		categorizationByValidNumber.put("NOT-VALID", customers.stream().filter(customer -> !validNumbers.contains(customer)).collect(Collectors.toList()));
+		categorizationByValidNumber.put("NOT-VALID",
+				customers.stream().filter(customer -> !validNumbers.contains(customer)).collect(Collectors.toList()));
 		log.info("CustomerServiceImpl.categorizeByValidNumber - end ");
 		return categorizationByValidNumber;
 	}
-
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -95,21 +124,40 @@ public class CustomerServiceImpl implements CustomerService {
 		log.info("CustomerServiceImpl.filterCustomersByRequest - start");
 		List<Customer> customers = getAllCustomers();
 		if (isFilterByCountry(filterDTO)) {
-			try {
-				List<Customer> filteredBy = customers.stream()
-						.filter(customer -> customer.getPhone()
-								.contains(CountryEnum.valueOf(filterDTO.getCountry()).getCountryCode()))
-						.collect(Collectors.toList());
-				log.info("CustomerServiceImpl.filterCustomersByRequest - end");
-				return ResponseEntity.status(HttpStatus.OK).body(filteredBy);
-			} catch (Exception e) {
-				log.error("Erros while filtering by country. ", e.getMessage());
-				throw new CustomerFilterException("Erros while filtering by country ");
-			}
+			return filterByCountry(filterDTO, customers);
 		}
-		
+
 		if (isFilterByState(filterDTO)) {
-			try {
+			return filterByState(filterDTO);
+		} else {
+			return filterByCountryAndState(filterDTO, customers);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	private ResponseEntity filterByCountryAndState(RequestFilterDTO filterDTO, List<Customer> customers) {
+		try {
+			Pattern pattern = Pattern.compile(RegexUtils.getRegexByRequest(filterDTO.getCountry()));
+			List<Customer> filteredBy = customers.stream()
+					.filter(customer -> customer.getPhone()
+							.contains(CountryEnum.valueOf(filterDTO.getCountry().toUpperCase()).getCountryCode()))
+					.collect(Collectors.toList());
+			List<Customer> listOfCustomerStates = "VALID".equalsIgnoreCase(filterDTO.getState())
+					? filteredBy.stream().filter(customer -> RegexUtils.validaRegex(customer, pattern))
+							.collect(Collectors.toList())
+					: filteredBy.stream().filter(customer -> !RegexUtils.validaRegex(customer, pattern))
+							.collect(Collectors.toList());
+			log.info("CustomerServiceImpl.filterCustomersByRequest - end");
+			return ResponseEntity.status(HttpStatus.OK).body(listOfCustomerStates);
+		} catch (Exception e) {
+			log.error("Erros while filtering by country and state. ", e.getMessage());
+			throw new CustomerFilterException("Erros while filtering by country and state.");
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	private ResponseEntity filterByState(RequestFilterDTO filterDTO) {
+		try {
 			Map<String, List<Customer>> validCutomers = categorizeByValidNumber();
 			log.info("CustomerServiceImpl.filterCustomersByRequest - end");
 			return ResponseEntity.status(HttpStatus.OK).body(validCutomers.get(filterDTO.getState()));
@@ -117,28 +165,31 @@ public class CustomerServiceImpl implements CustomerService {
 			log.error("Erros while filtering by state. ", e.getMessage());
 			throw new CustomerFilterException("Erros while filtering by state ");
 		}
-		}
-		else {	
-			try {
-			Pattern pattern = Pattern.compile(RegexUtils.getRegexByRequest(filterDTO.getCountry()));
+	}
+
+	@SuppressWarnings("rawtypes")
+	private ResponseEntity filterByCountry(RequestFilterDTO filterDTO, List<Customer> customers) {
+		try {
 			List<Customer> filteredBy = customers.stream()
 					.filter(customer -> customer.getPhone()
-							.contains(CountryEnum.valueOf(filterDTO.getCountry().toUpperCase()).getCountryCode()))
+							.contains(CountryEnum.valueOf(filterDTO.getCountry()).getCountryCode()))
 					.collect(Collectors.toList());
-			List<Customer> listOfCustomerStates = "VALID".equalsIgnoreCase(filterDTO.getState()) ? filteredBy.stream().filter(customer -> RegexUtils.validaRegex(customer, pattern)).collect(Collectors.toList()) :  filteredBy.stream().filter(customer -> !RegexUtils.validaRegex(customer, pattern)).collect(Collectors.toList());
 			log.info("CustomerServiceImpl.filterCustomersByRequest - end");
-			return ResponseEntity.status(HttpStatus.OK).body(listOfCustomerStates);
+			return ResponseEntity.status(HttpStatus.OK).body(filteredBy);
 		} catch (Exception e) {
-			log.error("Erros while filtering by country and state. ", e.getMessage());
-			throw new CustomerFilterException("Erros while filtering by country and state.");
+			log.error("Erros while filtering by country. ", e.getMessage());
+			throw new CustomerFilterException("Erros while filtering by country ");
 		}
-		}		
 	}
-	
-	private List<Customer> filterValidNumberByCountry(List<Customer> customers, CountryEnum country, String countryRegex) {
-		List<Customer> countryNumbers = customers.stream().filter(customer -> customer.getPhone().contains(country.getCountryCode())).collect(Collectors.toList());
+
+	private List<Customer> filterValidNumberByCountry(List<Customer> customers, CountryEnum country,
+			String countryRegex) {
+		List<Customer> countryNumbers = customers.stream()
+				.filter(customer -> customer.getPhone().contains(country.getCountryCode()))
+				.collect(Collectors.toList());
 		Pattern pattern = Pattern.compile(countryRegex);
-		return countryNumbers.stream().filter(customer -> RegexUtils.validaRegex(customer, pattern)).collect(Collectors.toList());
+		return countryNumbers.stream().filter(customer -> RegexUtils.validaRegex(customer, pattern))
+				.collect(Collectors.toList());
 	}
 
 	private boolean isFilterByState(RequestFilterDTO filterDTO) {
@@ -149,5 +200,4 @@ public class CustomerServiceImpl implements CustomerService {
 		return Strings.isNotBlank(filterDTO.getCountry()) && Strings.isBlank(filterDTO.getState());
 	}
 
-	
 }
