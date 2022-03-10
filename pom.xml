@@ -14,10 +14,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>jumia-excercise</name>
 	<description>Jumia Excercise</description>
+
 	<properties>
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -81,12 +83,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.8.9</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -110,7 +106,7 @@
 				</executions>
 				<configuration>
 					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
-					<repository>rafaelferreiram/jumia</repository>
+					<repository>rafaelferreiram/jumia-exercise</repository>
 					<tag>${project.version}</tag>
 					<buildArgs>
 						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>

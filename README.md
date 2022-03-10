@@ -2,13 +2,43 @@
 
 This exercise was fully developed in one day with the purpose of attending the requirements set on the document of this exercise.
 
+## Technologies
+* Java 11
+* Springboot
+* Docker
+* Swagger
+* JUnit
+
+
 ## Installation
 
-Use the maven to install build the Jumia Exercise.
+Use the maven to install to  build the Jumia Exercisen Project.
 
 ```bash
 mvn clean install
 ```
+
+As we have our Dockerfile set up and our pom.xml configured, we can go onto the next step to generate a docker image.
+
+To do so we have to go to our project root and run the following command, which will generate a .jar file inside the Target folder.
+
+```bash
+mvn package
+```
+After running the ‘mvn package’ we can check for our local docker images and see if its there. We can do it by running
+
+```bash
+docker images
+```
+To run it in background mode we just have to add a property in the command. ‘-d’.
+
+```bash
+docker run -d -p 8080:8080 rafaelferreiram/jumia-exercise:0.0.1-SNAPSHOT
+```
+
+After starting up our Project application we can check our Swagger (API Documentation) :
+[http://localhost:8080/jumia/swagger-ui.html](http://localhost:8080/jumia/swagger-ui.html#/)
+
 
 ## Usage
 
